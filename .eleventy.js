@@ -7,7 +7,7 @@ const { irand, frand, angleToV } = require("./11ty/filters.js");
 /** @param {import('@11ty/eleventy/src/UserConfig')} config */
 module.exports = config => {
   // if production
-  console.log('WHAT IS THE ENV IN .eleventy.js',process.env.NODE_ENV)
+  console.log("WHAT IS THE ENV IN .eleventy.js", process.env.NODE_ENV);
   if (process.env.NODE_ENV === "development") {
     // minify html,svg and inline css and js
     config.addTransform("htmlmin", async (content, outputPath) => {
@@ -19,7 +19,9 @@ module.exports = config => {
           minifyJS: true,
           minifyCSS: true,
           customAttrCollapse: /d/,
-          ignoreCustomFragments: [/<!--ELEVENTYEDGE_edge.*ELEVENTYEDGE_edge-->/]
+          ignoreCustomFragments: [
+            /<!--ELEVENTYEDGE_edge.*ELEVENTYEDGE_edge-->/,
+          ],
         });
         return minified;
       }
