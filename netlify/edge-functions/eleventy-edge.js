@@ -15,8 +15,8 @@ export default async (request, context) => {
       cookies: [],
     });
 
-    const url = new URL(request.url)
-    const nCrystals = url.searchParams.get('n-crystals') || 4
+    const url = new URL(request.url);
+    const nCrystals = url.searchParams.get("n-crystals") || 4;
     // const yStride = url.searchParams.get('y-stride') || 2
 
     edge.config(config => {
@@ -24,14 +24,18 @@ export default async (request, context) => {
       config.addNunjucksFilter("frand", frand);
       config.addNunjucksFilter("angleToV", angleToV);
 
-      config.addGlobalData('nCrystals',nCrystals)
+      config.addGlobalData("nCrystals", nCrystals);
 
-      // Add some custom Edge-specific configuration
-      // e.g. Fancier json output
-      // eleventyConfig.addFilter("json", obj => JSON.stringify(obj, null, 2));
     });
 
-    return await edge.handleResponse();
+    const res = await edge.handleResponse();
+    const b = await res.text();
+    const mini = b
+      .replace(/\>[\r\n ]+\</g, "><")
+      .replace(/(<.*?>)|\s+/g, (m, $1) => ($1 ? $1 : " "))
+      .trim();
+
+    return new Response(mini, res);
   } catch (e) {
     console.log("ERROR", { e });
     return context.next(e);
