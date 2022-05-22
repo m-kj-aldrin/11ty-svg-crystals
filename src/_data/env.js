@@ -1,2 +1,2 @@
-module.exports.production =
-  process.env.NODE_ENV === "development" ? false : true;
+module.exports.dev =
+  process.env.NODE_ENV === "dev" ? true : false;
