@@ -115,7 +115,7 @@ values="
 </pattern>
 </defs>
 {# bg #}
-<rect width="100%" height="100%" fill="var(--wht)" />
+<rect width="100%" height="100%" fill="url(#pattern-grid)" />
 {% set n = nCrystals %}
 {% set gridStep = (256 - 16) / n %}
 <g transform="translate({{gridStep/1.5}} {{gridStep/1.5}})" filter="url(#filter-scrible)">
