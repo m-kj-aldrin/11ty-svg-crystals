@@ -9,21 +9,21 @@ module.exports = config => {
   // if production
   if (process.env.NODE_ENV !== "dev") {
     // minify html,svg and inline css and js
-    config.addTransform("htmlmin", async (content, outputPath) => {
-      if (outputPath && outputPath.endsWith(".html")) {
-        let minified = await minify(content, {
-          useShortDoctype: true,
-          removeComments: true,
-          collapseWhitespace: true,
-          minifyJS: true,
-          minifyCSS: true,
-          customAttrCollapse: /d/,
-        });
-        return minified;
-      }
+    // config.addTransform("htmlmin", async (content, outputPath) => {
+    //   if (outputPath && outputPath.endsWith(".html")) {
+    //     let minified = await minify(content, {
+    //       useShortDoctype: true,
+    //       removeComments: true,
+    //       collapseWhitespace: true,
+    //       minifyJS: true,
+    //       minifyCSS: true,
+    //       customAttrCollapse: /d/,
+    //     });
+    //     return minified;
+    //   }
 
-      return content;
-    });
+    //   return content;
+    // });
   } else {
     // else copy over the assets
     config.addPassthroughCopy("src/css");
