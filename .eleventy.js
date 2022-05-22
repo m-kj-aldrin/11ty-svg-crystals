@@ -30,8 +30,8 @@ module.exports = config => {
     config.addPassthroughCopy("src/js");
   }
 
-  config.addPlugin(EleventyEdgePlugin)
-  
+  config.addPlugin(EleventyEdgePlugin);
+
   config.addNunjucksFilter("irand", irand);
   config.addNunjucksFilter("frand", frand);
   config.addNunjucksFilter("angleToV", angleToV);

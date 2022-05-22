@@ -11,7 +11,7 @@ function saveSvg(e) {
   const a = document.createElement("a");
 
   a.href = URL.createObjectURL(file);
-  a.download = `svg-illu${document.querySelector("#image-sufix").value}.svg`;
+  a.download = `illu-crystals${document.querySelector("#image-sufix").value}.svg`;
   a.click();
 }
 function savePng(e) {
@@ -49,7 +49,7 @@ function savePng(e) {
 
     const a = document.createElement("a");
     a.href = png;
-    a.download = `svg-illu-0.${dim.w}x${dim.h}${
+    a.download = `illu-crystals${dim.w}x${dim.h}${
       document.querySelector("#image-sufix").value
     }.png`;
     a.click();

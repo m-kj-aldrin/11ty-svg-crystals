@@ -1,22 +1,130 @@
 ---
 layout: base.njk
 ---
-{% import "macro/crystal.njk" as crystal %}
+{# {% include "partials/test.njk" %} #}
+{# {% import "macro/crystal.njk" as crystal %} #}
+{% edge "njk" %}
 
-<svg width="100%" height="100%" viewBox="0 0 256 256" 
+{% macro crystal(p) %}
+    {% set pScore = p.n %}
+    <g class="circle-spokes">
+        {% for spoke in range(0, p.n) %}
+            {# crystal rotation #}
+            <g transform="rotate({{ spoke*(360/p.n) }})">
+
+                {# spokes #}
+                <line {{ p.attrs.spoke }} stroke-dasharray="{{ [0,2] | irand * 2 }}" x1="{{ p.c }}" x2="{{ p.w }}" stroke-width="0.5" />
+
+                {# dots #}
+                {% if[0, 1] | frand > (pScore / 8) %}
+                <g {{ p.attrs.dots }} class="crystal-dots">
+
+                    {% set pScore = pScore + 1 %}
+
+                    <circle cx="{{ p.w }}" r="1" />
+                    {% if[0, 1] | frand > (pScore / 5) %}
+                    {% set nDots = [1, 8] | irand %}
+
+                    {% set pScore = pScore + nDots / 4 %}
+
+                    {% for i in range(0, nDots) %}
+                        <circle cx="{{ p.w * 1.125 * (1 + 0.25 * (i)/nDots ) }}" r="{{ 1.1 - nDots/8 }}" />
+                    {% endfor %}
+                {% endif %}
+            </g>
+        {% endif %}
+
+        {# pie slices #}
+        {% if[0, 1] | frand > (pScore / 8) %}
+
+        {% set pScore = pScore + 2 %}
+
+        {% set arcV = [
+            360 / p.n,
+            p.w
+        ] | angleToV %}
+        {% set arcN = [
+            180 / p.n,
+            p.w
+        ] | angleToV %}
+
+        {% set m = [1, 2] | irand * 0.25 %}
+
+        <g {{ p.attrs.slices }} class="crystal-slice" 
+                        transform="scale({{ [1,2] | irand * 0.25 }}) translate({{ arcN[0]*m }} {{ arcN[1]*m }})">
+
+            <path d="
+                            M0,0
+                            H{{ p.w }}
+                            A{{ p.w }},{{ p.w }} 0 0 1 {{ arcV[0] }},{{ arcV[1] }}
+                            Z" 
+                            vector-effect="non-scaling-stroke" />
+        </g>
+    {% endif %}
+
+</g>
+{% endfor %}
+
+{# "pricken över i'et" #}
+{% if pScore < 6 %}
+<circle cx="0" cy="0" r="4" fill="var(--wht)" />
+<circle cx="0" cy="0" r="2" fill="var(--secondary)" />
+{% endif %}
+</g>
+{% endmacro %}
+
+<svg width="100%" height="100%" viewBox="0 0 256 256"
     {# color props #}
     style="--primary:rgb(131, 111, 219);--secondary:rgb(201, 233, 74); --blk:rgb(47, 5, 0); --wht: rgb(255, 255, 255);">
-    {# bg #}
-    <rect width="100%" height="100%" fill="var(--wht)" />
-    {% set n = 4 %}
-    {% set gridStep = (256 - 16) / n %}
-    <g transform="translate({{gridStep/1.5}} {{gridStep/1.5}})">
-        {% for y in range(0, n) %}
-            {% for x in range(0, n) %}
 
-                <g transform="translate({{x*gridStep}} {{y*gridStep}})">
-                    {{
-                        crystal.one({
+<defs>
+{# filter defs #}
+<filter id="filter-scrible">
+<feTurbulence seed="1" type="fractalNoise" baseFrequency="1" />
+<feDisplacementMap in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="0.1" />
+<feGaussianBlur stdDeviation="0.1" result="blur" />
+<feColorMatrix type="matrix" 
+values="
+1 0 0 0 0
+0 1 0 0 0
+0 0 1 0 0
+0 0 0 0.75 0" />
+<feMerge>
+    <feMergeNode />
+    <feMergeNode in="SourceGraphic" />
+</feMerge>
+</filter>
+<filter id="filter-grain" x="0" y="0" width="100%" height="100%">
+<feTurbulence seed="1" type="fractalNoise" baseFrequency="2" />
+<feColorMatrix type="saturate" values="0" />
+{% set contrast = 4 %}
+<feColorMatrix type="matrix"
+            values="
+                {{ contrast }} 0 0 0 -{{ (contrast - 1) / 4 }}
+                0 {{ contrast }} 0 0 -{{ (contrast - 1) / 4 }}
+                0 0 {{ contrast }} 0 -{{ (contrast - 1) / 4 }}
+                0 0 0 1 0" />
+</filter>
+{# pattern defs #}
+{% set patternSize = 8 %}
+<pattern id="pattern-grid" width="{{patternSize}}" height="{{patternSize}}" patternUnits="userSpaceOnUse">
+<g stroke="green" stroke-width="0.25" opacity="0.125">
+    <line x1="0" x2="16" y1="8" y2="8" />
+    <line y1="0" y2="16" x1="8" x2="8" />
+</g>
+</pattern>
+</defs>
+{# bg #}
+<rect width="100%" height="100%" fill="var(--wht)" />
+{% set n = nCrystals %}
+{% set gridStep = (256 - 16) / n %}
+<g transform="translate({{gridStep/1.5}} {{gridStep/1.5}})" filter="url(#filter-scrible)">
+{% for y in range(0, n) %}
+{% for x in range(0, n) %}
+
+    <g transform="translate({{x*gridStep}} {{y*gridStep}})">
+        {{
+                        crystal({
                         n: [1,3] | irand * 2,
                         c: gridStep/12,
                         w: gridStep/3,
@@ -27,10 +135,13 @@ layout: base.njk
                         } 
                         })
                     }}
-                </g>
-
-            {% endfor %}
-        {% endfor %}
     </g>
-    <rect id="debug-frame" width="100%" height="100%" fill="none" stroke="#0001" stroke-width="0.25" />
+
+{% endfor %}
+{% endfor %}
+</g>
+{# grain overlay #}
+<rect width="100%" height="100%" filter="url(#filter-grain)" opacity="0.3" />
+<rect id="debug-frame" width="100%" height="100%" fill="none" stroke="#0001" stroke-width="0.25" />
 </svg>
+{% endedge %}
