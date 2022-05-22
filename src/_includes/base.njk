@@ -29,10 +29,10 @@
                         <span>number of crystals</span>
                         <input type="number" name="n-crystals" value="{% edge "njk" %}{{nCrystals}}{% endedge %}" min="2" max="96">
                     </label>
-                    <label>
+                    {# <label>
                         <span>y stride</span>
-                        {# <input type="number" name="y-stride" value="{% edge "njk" %}{{yStride}}{% endedge %}" min="1" max="32"> #}
-                    </label>
+                        <input type="number" name="y-stride" value="{% edge "njk" %}{{yStride}}{% endedge %}" min="1" max="32">
+                    </label> #}
                     <button>reload</button>
                 </fieldset>
             </form>
