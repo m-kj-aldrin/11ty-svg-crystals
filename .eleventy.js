@@ -7,7 +7,7 @@ const { irand, frand, angleToV } = require("./11ty/filters.js");
 /** @param {import('@11ty/eleventy/src/UserConfig')} config */
 module.exports = config => {
   // if production
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV !== "dev") {
     // minify html,svg and inline css and js
     config.addTransform("htmlmin", async (content, outputPath) => {
       if (outputPath && outputPath.endsWith(".html")) {

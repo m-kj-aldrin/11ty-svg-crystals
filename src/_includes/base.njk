@@ -8,6 +8,7 @@
 
         {# inline css #}
         {% if env.production %}
+            {{ env.production | log}}
             <style>
                 {% include "../css/reset.css" %}
             </style>

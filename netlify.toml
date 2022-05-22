@@ -3,7 +3,6 @@
   command = "eleventy"
   functions = "netlify/functions"
   publish = "_site"
-  environment = { NODE_ENV = "production" }
 [[edge_functions]]
   function = "eleventy-edge"
   path = "/"
