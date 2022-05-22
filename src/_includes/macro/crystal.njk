@@ -1,0 +1,67 @@
+{% macro one(p) %}
+    {% set pScore = p.n %}
+    <g class="circle-spokes">
+        {% for spoke in range(0, p.n) %}
+            {# crystal rotation #}
+            <g transform="rotate({{ spoke*(360/p.n) }})">
+
+                {# spokes #}
+                <line {{ p.attrs.spoke }} stroke-dasharray="{{ [0,2] | irand * 2 }}" x1="{{ p.c }}" x2="{{ p.w }}" stroke-width="0.5" />
+
+                {# dots #}
+                {% if[0, 1] | frand > (pScore / 8) %}
+                    <g {{ p.attrs.dots }} class="crystal-dots">
+
+                        {% set pScore = pScore + 1 %}
+
+                        <circle cx="{{ p.w }}" r="1" />
+                        {% if[0, 1] | frand > (pScore / 5) %}
+                            {% set nDots = [1, 8] | irand %}
+
+                            {% set pScore = pScore + nDots / 4 %}
+
+                            {% for i in range(0, nDots) %}
+                                <circle cx="{{ p.w * 1.125 * (1 + 0.25 * (i)/nDots ) }}" r="{{ 1.1 - nDots/8 }}" />
+                            {% endfor %}
+                        {% endif %}
+                    </g>
+                {% endif %}
+
+                {# pie slices #}
+                {% if[0, 1] | frand > (pScore / 8) %}
+
+                    {% set pScore = pScore + 2 %}
+
+                    {% set arcV = [
+                        360 / p.n,
+                        p.w
+                    ] | angleToV %}
+                    {% set arcN = [
+                        180 / p.n,
+                        p.w
+                    ] | angleToV %}
+
+                    {% set m = [1, 2] | irand * 0.25 %}
+
+                    <g {{ p.attrs.slices }} class="crystal-slice" 
+                        transform="scale({{ [1,2] | irand * 0.25 }}) translate({{ arcN[0]*m }} {{ arcN[1]*m }})">
+
+                        <path d="
+                            M0,0
+                            H{{ p.w }}
+                            A{{ p.w }},{{ p.w }} 0 0 1 {{ arcV[0] }},{{ arcV[1] }}
+                            Z" 
+                            vector-effect="non-scaling-stroke" />
+                    </g>
+                {% endif %}
+
+            </g>
+        {% endfor %}
+
+        {# "pricken över i'et" #}
+        {% if pScore < 6 %}
+            <circle cx="0" cy="0" r="4" fill="var(--wht)" />
+            <circle cx="0" cy="0" r="2" fill="var(--secondary)" />
+        {% endif %}
+    </g>
+{% endmacro %}

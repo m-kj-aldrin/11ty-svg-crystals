@@ -1,0 +1,36 @@
+---
+layout: base.njk
+---
+{% import "macro/crystal.njk" as crystal %}
+
+<svg width="100%" height="100%" viewBox="0 0 256 256" 
+    {# color props #}
+    style="--primary:rgb(131, 111, 219);--secondary:rgb(201, 233, 74); --blk:rgb(47, 5, 0); --wht: rgb(255, 255, 255);">
+    {# bg #}
+    <rect width="100%" height="100%" fill="var(--wht)" />
+    {% set n = 4 %}
+    {% set gridStep = (256 - 16) / n %}
+    <g transform="translate({{gridStep/1.5}} {{gridStep/1.5}})">
+        {% for y in range(0, n) %}
+            {% for x in range(0, n) %}
+
+                <g transform="translate({{x*gridStep}} {{y*gridStep}})">
+                    {{
+                        crystal.one({
+                        n: [1,3] | irand * 2,
+                        c: gridStep/12,
+                        w: gridStep/3,
+                        attrs: {
+                            spoke: "stroke=var(--primary)",
+                            dots: "fill=var(--primary)",
+                            slices: "fill=var(--blk) stroke=none"
+                        } 
+                        })
+                    }}
+                </g>
+
+            {% endfor %}
+        {% endfor %}
+    </g>
+    <rect id="debug-frame" width="100%" height="100%" fill="none" stroke="#0001" stroke-width="0.25" />
+</svg>

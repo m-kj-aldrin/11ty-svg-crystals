@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>-</title>
+
+        {# inline css #}
+        {% if env.production %}
+            <style>{% include "../css/reset.css" %}</style>
+            <style>{% include "../css/main.css" %}</style>
+        {% else %}
+            <link rel="stylesheet" href="/css/reset.css">
+            <link rel="stylesheet" href="/css/main.css">
+        {% endif %}
+
+    </head>
+    <body>
+        <main>{{content | safe}}</main>
+        {# inline script #}
+        {% if env.production %}
+           <script>
+           {% include "../js/main.js" %}
+           </script> 
+        {% endif %}
+    </body>
+</html>
