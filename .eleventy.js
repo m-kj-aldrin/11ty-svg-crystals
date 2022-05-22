@@ -1,4 +1,5 @@
 const { minify } = require("html-minifier-terser");
+const { EleventyEdgePlugin } = require("@11ty/eleventy");
 
 // filters - -
 const { irand, frand, angleToV } = require("./11ty/filters.js");
@@ -29,6 +30,8 @@ module.exports = config => {
     config.addPassthroughCopy("src/js");
   }
 
+  config.addPlugin(EleventyEdgePlugin)
+  
   config.addNunjucksFilter("irand", irand);
   config.addNunjucksFilter("frand", frand);
   config.addNunjucksFilter("angleToV", angleToV);
